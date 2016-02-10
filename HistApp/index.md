@@ -6,7 +6,7 @@ job         : CIn/UFPE
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      # 
-widgets     : []            # {mathjax, quiz, bootstrap}
+widgets     : [bootstrap, quiz, shiny, interactive]            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft}
 knit        : slidify::knit2slides
 ---
@@ -40,6 +40,7 @@ Details of the Implementation
 ## ui.R code
 
 1. Simple ui.R code
+
 
 ```r
 library(shiny)
@@ -86,10 +87,29 @@ shinyUI(pageWithSidebar(
 </div>
 </div>
 </div><!--/html_preserve-->
+
 --- .class #id 
 
 ## server.R code
 1. Simple server.R code
+
+```r
+ x <- rnorm(5000, mean = runif(1, -10, 10), sd = runif(1, 0.5, 5))
+ library(shiny)
+ shinyServer(
+  function(input, output) {
+    output$newHist <- renderPlot(
+      {
+        # Generate a Random Normal PDF with the input parameters from UI 
+        x2 <- rnorm(5000, mean = input$meanvalue, sd = input$sdvalue)
+        hist(x, breaks = input$nbreaks, xlab='Random Sample- Normal PDF', col='lightblue', 
+             main='Histogram', probability = TRUE)
+        lines(density(x2), lty="dotted", col="red", lwd=2)
+              } #end code inside renderplot
+  ) #end cal to renderplot
+  } # server function call
+) #end shinyserver
+```
 
 --- .class #id 
 
